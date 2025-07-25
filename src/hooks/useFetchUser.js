@@ -6,6 +6,7 @@ const useFetchUser = () => {
   const [nombre, setNombre] = useState("");
   const [edad, setEdad] = useState("");
   const [correo, setCorreo] = useState("");
+  const [usuarioEditando, setUsuarioEditando] = useState(null);
 
   // Estados para la lista de usuarios
   const [usuarios, setUsuarios] = useState([]);
@@ -60,6 +61,61 @@ const useFetchUser = () => {
     }
   };
 
+  // Eliminar usuario de la API
+  const handleEliminar = async (id) => {
+    try {
+      const response = await fetch(`https://retoolapi.dev/zZhXYF/movil/${id}`, {
+        method: "DELETE",
+      });
+
+      if (response.ok) {
+        Alert.alert("Éxito", "Usuario eliminado correctamente");
+        fetchUsuarios(); // Actualizar lista
+      } else {
+        Alert.alert("Error", "No se pudo eliminar el usuario");
+      }
+    } catch (error) {
+      console.error(error);
+      Alert.alert("Error", "Ocurrió un error al eliminar el usuario");
+    }
+  };
+
+  // Editar usuario en la API
+  const handleEditar = async () => {
+    if (!nombre || !edad || !correo) {
+      Alert.alert("Error", "Por favor, completa todos los campos");
+      return;
+    }
+
+    try {
+      const response = await fetch(`https://retoolapi.dev/zZhXYF/movil/${usuarioEditando.id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          nombre,
+          edad: parseInt(edad),
+          correo,
+        }),
+      });
+
+      if (response.ok) {
+        Alert.alert("Éxito", "Usuario editado correctamente");
+        setNombre("");
+        setEdad("");
+        setCorreo("");
+        setUsuarioEditando(null); // Limpiar estado de edición
+        fetchUsuarios(); // Actualizar lista
+      } else {
+        Alert.alert("Error", "No se pudo editar el usuario");
+      }
+    } catch (error) {
+      console.error(error);
+      Alert.alert("Error", "Ocurrió un error al editar los datos");
+    }
+  };
+
   // Ejecutar al cargar componente
   useEffect(() => {
     fetchUsuarios();
@@ -74,9 +130,13 @@ const useFetchUser = () => {
     correo,
     setCorreo,
     handleGuardar,
+    handleEliminar,
+    handleEditar,
     usuarios,
     loading,
     fetchUsuarios,
+    usuarioEditando,
+    setUsuarioEditando,
   };
 };
 

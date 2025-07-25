@@ -1,16 +1,3 @@
-//using https://retool.com/api-generator#iframe-section
-
-//la siguiente direccion: https://retoolapi.dev/zZhXYF/movil
-
-/*
-información de la api
-{
-id: 1,
-edad: 84,
-correo: "-",
-nombre: "Filippa Gwillim"
-},
-*/
 import React, { useCallback } from "react";
 import {
   StyleSheet,
@@ -22,12 +9,11 @@ import {
 } from "react-native";
 
 import CardUser from "../components/Users/CardUser";
-
 import useFetchUser from "../hooks/useFetchUser";
 import { useFocusEffect } from "@react-navigation/native";
 
 const ShowUser = () => {
-  const { usuarios, loading, fetchUsuarios } = useFetchUser();
+  const { usuarios, loading, fetchUsuarios, handleEliminar, setUsuarioEditando } = useFetchUser();
 
   // Se ejecuta cada vez que esta pantalla se enfoca
   useFocusEffect(
@@ -35,6 +21,11 @@ const ShowUser = () => {
       fetchUsuarios();
     }, [])
   );
+
+  // Función para manejar la edición de un usuario
+  const handleEditar = (user) => {
+    setUsuarioEditando(user);  // Guardamos el usuario en el estado de edición
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -59,7 +50,13 @@ const ShowUser = () => {
         <FlatList
           data={usuarios}
           keyExtractor={(user) => user.id.toString()}
-          renderItem={({ item }) => <CardUser user={item} />}
+          renderItem={({ item }) => (
+            <CardUser
+              user={item}
+              handleEliminar={handleEliminar} // Pasamos la función de eliminar
+              handleEditar={handleEditar}     // Pasamos la función de editar
+            />
+          )}
           contentContainerStyle={styles.listContainer}
         />
       )}
@@ -97,27 +94,6 @@ const styles = StyleSheet.create({
     color: "#3B2C24",
     textAlign: "center",
     marginBottom: 10,
-  },
-  card: {
-    backgroundColor: "#FFF",
-    borderRadius: 12,
-    padding: 20,
-    marginVertical: 10,
-    elevation: 4,
-    shadowColor: "#000",
-    shadowOpacity: 0.2,
-    shadowOffset: { width: 1, height: 2 },
-    shadowRadius: 4,
-  },
-  cardTitle: {
-    fontSize: 20,
-    fontWeight: "bold",
-    color: "#5C3D2E",
-    marginBottom: 5,
-  },
-  cardText: {
-    fontSize: 16,
-    color: "#3B2C24",
   },
 });
 

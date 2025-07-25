@@ -1,46 +1,50 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity, Alert } from "react-native";
 
-const CardUser = ({user}) => {
+const CardUser = ({ user, handleEliminar, handleEditar }) => {
+
+  // Función de edición: pasamos el usuario al momento de editar
+  const handleEditarUsuario = () => {
+    handleEditar(user);
+  };
+
+  // Función de eliminación: pide confirmación antes de eliminar
+  const handleEliminarUsuario = () => {
+    Alert.alert(
+      "Confirmación",
+      `¿Estás seguro que deseas eliminar a ${user.nombre}?`,
+      [
+        {
+          text: "Cancelar",
+          style: "cancel"
+        },
+        {
+          text: "Eliminar",
+          onPress: () => handleEliminar(user.id)
+        }
+      ]
+    );
+  };
+
   return ( 
         <View style={styles.card}>
           <Text style={styles.cardTitle}>{user.nombre}</Text>
           <Text style={styles.cardText}>Edad: {user.edad}</Text>
           <Text style={styles.cardText}>Correo: {user.correo}</Text>
+          {/* Botones para editar y eliminar */}
+          <View style={styles.buttonsContainer}>
+            <TouchableOpacity style={styles.button} onPress={handleEditarUsuario}>
+              <Text style={styles.buttonText}>Editar</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.buttonDelete} onPress={handleEliminarUsuario}>
+              <Text style={styles.buttonText}>Eliminar</Text>
+            </TouchableOpacity>
+          </View>
         </View>
    );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#EAD8C0',
-    paddingHorizontal: 20,
-    paddingTop: 40
-  },
-  listContainer: {
-    paddingBottom: 30,
-  },
-  title: {
-    fontSize: 26,
-    fontWeight: 'bold',
-    color: '#5C3D2E',
-    textAlign: 'center',
-    marginBottom: 5
-  },
-  subtitle: {
-    fontSize: 16,
-    fontWeight: '500',
-    color: '#5C3D2E',
-    textAlign: 'center',
-    marginBottom: 10
-  },
-  counterText: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#3B2C24',
-    textAlign: 'center',
-    marginBottom: 10
-  },
   card: {
     backgroundColor: '#FFF',
     borderRadius: 12,
@@ -61,6 +65,32 @@ const styles = StyleSheet.create({
   cardText: {
     fontSize: 16,
     color: '#3B2C24'
+  },
+  buttonsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 15,
+  },
+  button: {
+    backgroundColor: '#5C3D2E',
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    borderRadius: 10,
+    width: '45%',
+    alignItems: 'center',
+  },
+  buttonDelete: {
+    backgroundColor: '#D9534F', // Rojo para eliminar
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    borderRadius: 10,
+    width: '45%',
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: '#FFF',
+    fontWeight: 'bold',
+    textAlign: 'center',
   }
 });
 

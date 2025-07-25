@@ -72,7 +72,9 @@ const useFetchUser = () => {
         Alert.alert("Éxito", "Usuario eliminado correctamente");
         fetchUsuarios(); // Actualizar lista
       } else {
-        Alert.alert("Error", "No se pudo eliminar el usuario");
+        const errorBody = await response.text();
+        console.error("Error al eliminar usuario:", response.status, errorBody);
+        Alert.alert("Error", `No se pudo eliminar el usuario. Código: ${response.status}`);
       }
     } catch (error) {
       console.error(error);
@@ -108,7 +110,9 @@ const useFetchUser = () => {
         setUsuarioEditando(null); // Limpiar estado de edición
         fetchUsuarios(); // Actualizar lista
       } else {
-        Alert.alert("Error", "No se pudo editar el usuario");
+        const errorBody = await response.text();
+        console.error("Error al editar el usuario:", response.status, errorBody);
+        Alert.alert("Error", `No se pudo editar el usuario Código: ${response.status}`);
       }
     } catch (error) {
       console.error(error);
